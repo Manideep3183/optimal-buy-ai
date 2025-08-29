@@ -3,9 +3,10 @@ import { ProductSearch } from "@/components/ProductSearch";
 import { ProductCard, Product } from "@/components/ProductCard";
 import { MLRecommendation } from "@/components/MLRecommendation";
 import { PriceTrendChart } from "@/components/PriceTrendChart";
+import { SentimentAnalysis } from "@/components/SentimentAnalysis";
 import { useToast } from "@/hooks/use-toast";
-import { generateMockProducts, generateMLPrediction, generatePriceTrendData } from "@/data/mockData";
-import { Loader2, ShoppingCart, TrendingUp, Zap } from "lucide-react";
+import { generateMockProducts, generateMLPrediction, generatePriceTrendData, generateSentimentData } from "@/data/mockData";
+import { Loader2, ShoppingCart, TrendingUp, Zap, MessageCircle } from "lucide-react";
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,6 +14,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [mlPrediction, setMLPrediction] = useState(null);
   const [priceData, setPriceData] = useState(null);
+  const [sentimentData, setSentimentData] = useState(null);
   const { toast } = useToast();
 
   const handleSearch = async (query: string) => {
@@ -24,10 +26,12 @@ const Index = () => {
       const mockProducts = generateMockProducts(query);
       const prediction = generateMLPrediction(query);
       const trendData = generatePriceTrendData(query);
+      const sentiment = generateSentimentData(query);
       
       setProducts(mockProducts);
       setMLPrediction(prediction);
       setPriceData(trendData);
+      setSentimentData(sentiment);
       setIsLoading(false);
       
       toast({
@@ -184,6 +188,19 @@ const Index = () => {
                   <h3 className="text-3xl font-display font-bold">Historical Price Analysis</h3>
                 </div>
                 <PriceTrendChart data={priceData} productName={searchQuery} />
+              </section>
+            )}
+
+            {/* Sentiment Analysis */}
+            {sentimentData && (
+              <section className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-r from-primary to-primary-light flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-3xl font-display font-bold">Customer Sentiment</h3>
+                </div>
+                <SentimentAnalysis data={sentimentData} productName={searchQuery} />
               </section>
             )}
           </div>

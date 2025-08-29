@@ -1,6 +1,7 @@
 import { Product } from "@/components/ProductCard";
 import { MLPrediction } from "@/components/MLRecommendation";
 import { PriceTrendData } from "@/components/PriceTrendChart";
+import { SentimentData } from "@/components/SentimentAnalysis";
 
 export const generateMockProducts = (query: string): Product[] => {
   const baseProducts = [
@@ -99,4 +100,95 @@ export const generatePriceTrendData = (query: string): PriceTrendData[] => {
   }
   
   return data;
+};
+
+export const generateSentimentData = (query: string): SentimentData => {
+  const sentiments: SentimentData['overallSentiment'][] = ['positive', 'negative', 'neutral'];
+  const overallSentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
+  
+  // Generate realistic sentiment percentages
+  let positivePercentage, negativePercentage, neutralPercentage;
+  
+  if (overallSentiment === 'positive') {
+    positivePercentage = Math.floor(Math.random() * 20) + 60; // 60-80%
+    negativePercentage = Math.floor(Math.random() * 15) + 5; // 5-20%
+    neutralPercentage = 100 - positivePercentage - negativePercentage;
+  } else if (overallSentiment === 'negative') {
+    negativePercentage = Math.floor(Math.random() * 20) + 50; // 50-70%
+    positivePercentage = Math.floor(Math.random() * 15) + 10; // 10-25%
+    neutralPercentage = 100 - positivePercentage - negativePercentage;
+  } else {
+    neutralPercentage = Math.floor(Math.random() * 20) + 40; // 40-60%
+    positivePercentage = Math.floor(Math.random() * 25) + 20; // 20-45%
+    negativePercentage = 100 - positivePercentage - neutralPercentage;
+  }
+
+  const positiveAttributes = [
+    "Excellent build quality", "Great value for money", "Fast delivery", 
+    "User-friendly interface", "Reliable performance", "Good customer service",
+    "Durable construction", "Sleek design", "Easy setup", "Good battery life"
+  ];
+  
+  const negativeAttributes = [
+    "Delivery delays", "Poor packaging", "Limited features", 
+    "Expensive compared to alternatives", "Customer service issues", "Quality concerns",
+    "Complex setup", "Short battery life", "Design flaws", "Software bugs"
+  ];
+
+  const platforms = ['Amazon', 'Flipkart', 'Croma'];
+  const reviewComments = {
+    positive: [
+      `Great ${query}! Exactly what I was looking for. Highly recommended.`,
+      `Excellent quality and fast shipping. Very satisfied with my purchase.`,
+      `Amazing product! Worth every penny. Will definitely buy again.`,
+      `Perfect ${query} for the price. Great build quality and performance.`
+    ],
+    negative: [
+      `Disappointed with the ${query}. Not worth the price.`,
+      `Poor quality and slow delivery. Expected much better.`,
+      `Had issues with the product within a week. Poor customer service.`,
+      `Overpriced for what you get. Looking for alternatives.`
+    ],
+    neutral: [
+      `Decent ${query}. Does the job but nothing extraordinary.`,
+      `Average product. Some good features, some not so great.`,
+      `It's okay. Gets the work done but could be better.`,
+      `Fair quality for the price. Not the best, not the worst.`
+    ]
+  };
+
+  const generateRecentReviews = () => {
+    const reviews = [];
+    for (let i = 0; i < 4; i++) {
+      const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
+      const platform = platforms[Math.floor(Math.random() * platforms.length)];
+      const rating = sentiment === 'positive' ? Math.floor(Math.random() * 2) + 4 :
+                    sentiment === 'negative' ? Math.floor(Math.random() * 2) + 1 :
+                    Math.floor(Math.random() * 2) + 3;
+      
+      const date = new Date();
+      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+      
+      reviews.push({
+        id: `review-${i}`,
+        rating,
+        comment: reviewComments[sentiment][Math.floor(Math.random() * reviewComments[sentiment].length)],
+        sentiment,
+        platform,
+        date: date.toLocaleDateString()
+      });
+    }
+    return reviews;
+  };
+
+  return {
+    overallSentiment,
+    positivePercentage,
+    negativePercentage,
+    neutralPercentage,
+    totalReviews: Math.floor(Math.random() * 5000) + 1000,
+    commonPositives: positiveAttributes.sort(() => 0.5 - Math.random()).slice(0, 4),
+    commonNegatives: negativeAttributes.sort(() => 0.5 - Math.random()).slice(0, 3),
+    recentReviews: generateRecentReviews()
+  };
 };
