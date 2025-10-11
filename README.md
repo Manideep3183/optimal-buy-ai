@@ -1,3 +1,105 @@
+# 🛒 PriceCompare Pro
+
+**Smart Price Comparison with AI-Powered Recommendations**
+
+A full-stack application that scrapes Amazon and Flipkart in real-time, analyzes prices, and provides intelligent buying recommendations.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js v18 or higher
+- npm
+
+### Installation & Running
+
+**Option 1: Automatic (Linux/Mac)**
+```bash
+./start-dev.sh
+```
+
+**Option 2: Manual (2 Terminals Required)**
+
+Terminal 1 - Backend:
+```bash
+cd backend
+npm install
+npx playwright install chromium
+npm run start:dev
+```
+
+Terminal 2 - Frontend:
+```bash
+npm install  # if not already done
+npm run dev
+```
+
+Then open `http://localhost:5173` in your browser!
+
+## 📚 Documentation
+
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Complete setup and usage guide
+- **[COMMANDS.md](./COMMANDS.md)** - All CLI commands reference
+- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - Implementation overview
+- **[backend/README.md](./backend/README.md)** - Backend-specific documentation
+
+## 🏗️ Architecture
+
+```
+Frontend (React + Vite)  →  Backend (NestJS)  →  Playwright + Cheerio  →  Amazon & Flipkart
+     Port 5173                  Port 3001              Web Scraping
+```
+
+## ✨ Features
+
+- ✅ Real-time web scraping of Amazon & Flipkart
+- ✅ Concurrent scraping for optimal performance
+- ✅ Smart recommendation algorithm (70% price, 30% reviews)
+- ✅ Beautiful, responsive UI with shadcn/ui
+- ✅ TypeScript throughout
+- ✅ Error handling with graceful fallbacks
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React + TypeScript
+- Vite
+- shadcn-ui + Tailwind CSS
+
+**Backend:**
+- NestJS + TypeScript
+- Playwright (browser automation)
+- Cheerio (HTML parsing)
+- class-validator (DTO validation)
+
+## 🎯 API Endpoint
+
+```bash
+POST http://localhost:3001/search
+Content-Type: application/json
+
+{
+  "query": "iPhone 14"
+}
+```
+
+## 📦 Project Structure
+
+```
+├── backend/              # NestJS Backend
+│   ├── src/
+│   │   ├── scraper/     # Web scraping logic
+│   │   ├── dto/         # Data validation
+│   │   └── interfaces/  # TypeScript types
+│   └── package.json
+├── src/                 # React Frontend
+│   ├── components/      # UI components
+│   ├── pages/           # Page components
+│   └── data/            # Mock data utilities
+└── Documentation files
+```
+
+---
+
 # Welcome to your Lovable project
 
 ## Project info
