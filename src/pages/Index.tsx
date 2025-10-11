@@ -21,8 +21,42 @@ const Index = () => {
     setIsLoading(true);
     setSearchQuery(query);
     
-    // Simulate API call delay
-    setTimeout(() => {
+    try {
+      // Call the backend API
+      const response = await fetch('http://localhost:3001/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+
+      const backendProducts = await response.json();
+      
+      // Generate additional mock data for ML, trends, and sentiment
+      const prediction = generateMLPrediction(query);
+      const trendData = generatePriceTrendData(query);
+      const sentiment = generateSentimentData(query);
+      
+      setProducts(backendProducts);
+      setMLPrediction(prediction);
+      setPriceData(trendData);
+      setSentimentData(sentiment);
+      setIsLoading(false);
+      
+      toast({
+        title: "Search Complete",
+        description: `Found ${backendProducts.length} products from Amazon and Flipkart`,
+      });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setIsLoading(false);
+      
+      // Fallback to mock data if backend is not available
       const mockProducts = generateMockProducts(query);
       const prediction = generateMLPrediction(query);
       const trendData = generatePriceTrendData(query);
@@ -32,13 +66,13 @@ const Index = () => {
       setMLPrediction(prediction);
       setPriceData(trendData);
       setSentimentData(sentiment);
-      setIsLoading(false);
       
       toast({
-        title: "Search Complete",
-        description: `Found ${mockProducts.length} products from 3 platforms`,
+        title: "Using Demo Data",
+        description: "Backend not available. Showing mock data instead.",
+        variant: "destructive",
       });
-    }, 1500);
+    }
   };
 
   const findBestDeal = () => {
@@ -253,7 +287,7 @@ const Index = () => {
                 <span className="text-lg font-display font-bold gradient-text">PriceCompare Pro</span>
               </div>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Built with React, TypeScript & Machine Learning. Ready for Flask backend integration with MongoDB and real-time scraping.
+                Built with React, TypeScript & NestJS backend. Features real-time web scraping with Playwright and intelligent price recommendations.
               </p>
               <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
                 <span>© 2024 PriceCompare Pro</span>
